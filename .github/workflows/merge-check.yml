@@ -3,6 +3,10 @@ name: 🐿️ Check PR Merge Conflicts
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
+  push:
+    branches-ignore:
+      - main
+      - staging
 
 jobs:
   check-conflicts:

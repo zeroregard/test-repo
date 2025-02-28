@@ -2,7 +2,7 @@ name: 🐿️ Check PR Merge Conflicts
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   check-conflicts:

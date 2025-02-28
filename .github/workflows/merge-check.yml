@@ -20,7 +20,7 @@ jobs:
             const mergeableState = pr.mergeable_state;
             const currentLabels = pr.labels.map(label => label.name);
             console.log(`Mergeable state: ${mergeableState}`);
-            if (mergeableState === 'dirty') {
+            if (mergeableState === 'dirty' || mergeableState === 'unstable') {
               if (!currentLabels.includes('conflicts')) {
                 console.log("Adding 'conflicts' label...");
                 await github.rest.issues.addLabels({

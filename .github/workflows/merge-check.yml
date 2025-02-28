@@ -1,0 +1,43 @@
+name: 🐿️ Check PR Merge Conflicts
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check mergeable state and update label
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            const mergeableState = pr.mergeable_state;
+            const currentLabels = pr.labels.map(label => label.name);
+            console.log(`Mergeable state: ${mergeableState}`);
+            if (mergeableState === 'dirty') {
+              if (!currentLabels.includes('conflicts')) {
+                console.log("Adding 'conflicts' label...");
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  labels: ['conflicts'],
+                });
+              }
+            } else {
+              if (currentLabels.includes('conflicts')) {
+                console.log("Removing 'conflicts' label...");
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.payload.pull_request.number,
+                  name: 'conflicts',
+                });
+              }
+            }

@@ -8,6 +8,10 @@ on:
       - main
       - staging
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   check-conflicts:
     runs-on: ubuntu-latest
